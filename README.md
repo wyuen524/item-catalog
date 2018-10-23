@@ -46,7 +46,7 @@ These are the endpoints you can reach by typing in the url in the browser direct
 ```
 Category
 Create: localhost:8000/weapons/new
-Read: localhost:8000/weapons/<int:weapon_class_id>/ or localhost:8000/weapons/<int:weapon_class_id>/list
+Read: localhost:8000/weapons/<int:weapon_class_id>/
 Update: localhost:8000/weapons/<int:weapon_class_id>/edit
 Delete: localhost:8000/weapons/<int:weapon_class_id>/delete
 ```
@@ -54,7 +54,7 @@ Delete: localhost:8000/weapons/<int:weapon_class_id>/delete
 ```
 Item
 Create: localhost:8000/weapons/<int:weapon_class_id>/new
-Read: localhost:8000/weapons/<int:weapon_class_id>/ or localhost:8000/weapons/<int:weapon_class_id>/list
+Read: localhost:8000/deatails/<int:weapon_id>/
 Update: localhost:8000/weapons/<int:weapon_class_id>/<int:weapon_id>/edit
 Delete: localhost:8000/weapons/<int:weapon_class_id>/<int:weapon_id>/delete
 ```

@@ -173,17 +173,29 @@ def showWeapons():
                                login_state=login_session['username'])
 
 
-# Show all item info
+# Show all item info for category
 @app.route('/weapons/<int:weapon_class_id>/')
 @app.route('/weapons/<int:weapon_class_id>/list')
 def weaponList(weapon_class_id):
     weapon_class = session.query(Weapon).filter_by(
-                                 id=weapon_class_id).one()
+                                 id=weapon_class_id).first()
     items = session.query(ItemInfo).filter_by(
                           weapon_id=weapon_class.id)
     return render_template('weapon_templ.html',
                            weapon_class=weapon_class,
                            items=items)
+
+
+# Show all info for item
+@app.route('/details/<int:weapon_id>/')
+def weaponDetails(weapon_id):
+    items = session.query(ItemInfo).filter_by(
+                          weapon_id=weapon_id).one()
+    weapon_class = session.query(Weapon).filter_by(
+                                 id=items.weapon_id).first()
+    return render_template('weapon_templ.html',
+                           weapon_class=weapon_class,
+                           items=[items])
 
 
 # Create new item
@@ -252,7 +264,8 @@ def editItemInfo(weapon_class_id, weapon_id):
                 return render_template('editItemInfo.html',
                                        weapon_class_id=weapon_class_id,
                                        weapon_id=weapon_id,
-                                       item=editedItem)
+                                       item=editedItem,
+                                       category=category)
             editedItem.damage = request.form['damage']
         if request.form['dps']:
             try:
@@ -263,7 +276,8 @@ def editItemInfo(weapon_class_id, weapon_id):
                 return render_template('editItemInfo.html',
                                        weapon_class_id=weapon_class_id,
                                        weapon_id=weapon_id,
-                                       item=editedItem)
+                                       item=editedItem,
+                                       category=category)
             editedItem.dps = request.form['dps']
         if request.form['weapon_class']:
             editedItem.weapon_id = request.form['weapon_class']
@@ -305,7 +319,7 @@ def editCategoryInfo(weapon_class_id):
 def deleteItem(weapon_class_id, weapon_id):
     if 'username' not in login_session:
         return redirect('/login')
-    itemToDelete = session.query(ItemInfo).filter_by(id=weapon_id).one()
+    itemToDelete = session.query(ItemInfo).filter_by(id=weapon_id).first()
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -322,6 +336,7 @@ def deleteCategory(weapon_class_id):
         return redirect('/login')
     catToDelete = session.query(Weapon).filter_by(id=weapon_class_id).one()
     if request.method == 'POST':
+        itemsToDelete = session.query(ItemInfo).filter_by(id=catToDelete.id).delete()
         session.delete(catToDelete)
         session.commit()
         nextCat = session.query(Weapon).first()

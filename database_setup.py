@@ -31,7 +31,7 @@ class ItemInfo(Base):
     damage = Column(String(8))
     dps = Column(String(8))
     weapon_id = Column(Integer, ForeignKey('weapon.id'))
-    weapon = relationship(Weapon, cascade="delete,all", backref="parent")
+    weapon = relationship(Weapon)
 
     @property
     def serialize(self):
