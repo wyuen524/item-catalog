@@ -1,0 +1,44 @@
+<html>
+
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<div class="login" align="right" style="background-color: rgb(169, 100, 219); padding: 8px 8px;">
+	{% if login_state %}
+		Hi, {{ login_state }}<br>
+		<a href="{{ url_for('gdisconnect') }}">
+			<button style="background-color: Tomato;">Logout</button>
+		</a>
+	{% else %}
+		<a href="{{ url_for('showLogin') }}" >
+			<button style="background-color: DodgerBlue;">Login</button>
+		</a>
+	{% endif %}
+</div>
+
+
+<div class="title" align="center">
+	<h1>Fornite Weapons List</h1>
+	<img src="/static/banner2.jpg" style="visibility: hidden;">
+</div>
+
+<div class="tab">
+	{% for weapon in weapons %}
+	<button name="button" class="tablink" onclick="myFunction(&quot;{{url_for('weaponList', weapon_class_id = weapon.id)}}&quot;)">{{weapon.name}}</button>
+	{% endfor %}    
+</div>
+
+<iframe id="myFrame" src="{{url_for('weaponList', weapon_class_id = weapons[0].id)}}" width=100% height=100% scrolling="no" frameborder="0"></iframe>
+
+<script>
+function myFunction(weapon_id) {
+    document.getElementById("myFrame").src = weapon_id;
+}
+</script>
+
+</body>
+
+</html> 

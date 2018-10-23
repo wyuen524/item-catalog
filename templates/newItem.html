@@ -1,0 +1,47 @@
+<html>
+
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<h1>New Item</h1>
+
+<form action="{{ url_for('newItem', weapon_class_id=weapon_class_id )}}" method = 'post'>
+
+<dl>
+      <h2>
+	<dt>Name:</dt>
+		<dd><input type ='text' size='30' name='name' required></dd>
+            <dt>Description:</dt>
+                        <dd><textarea name = 'description' rows='5' cols='40' required></textarea></dd>
+            <dt>Damage:</dt>
+                        <dd><input type = 'text' size = '8' name='damage' required></dd>
+            <dt>DPS:</dt>
+                        <dd><input type = 'text' size = '8' name='dps' required></dd>
+            <dt>Weapon Class:</dt>
+
+            {% for cat in category %}
+                  {% if loop.first %}
+                        <dd><input type ='radio' name='weapon_class' value={{cat.id}} checked>{{cat.name}}</dd>
+                  {% else %}
+                        <dd><input type ='radio' name='weapon_class' value={{cat.id}}>{{cat.name}}</dd>
+                  {% endif %}
+            {% endfor %}
+      <h2>
+</dl>
+
+
+<input type='submit' style="font-family: fortnite; font-size: 16px; background-color: yellow; color: black; border-radius: 8px;" value='Create'>
+
+<a href = "{{url_for('weaponList', weapon_class_id = weapon_class_id) }}"> 
+      <button type="button" style="font-family: fortnite; font-size: 16px; background-color: orange; color: white; border-radius: 8px;">
+            Cancel</button>
+</a>
+
+</form>
+
+</body>
+
+</html>

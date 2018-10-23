@@ -1,0 +1,42 @@
+<html>
+
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<h3>Please address the following errors:</h3>
+<ul>
+{% for message in messages %}
+  <li><strong>{{message}}</strong></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<h1> Edit Category Details</h1>
+
+<form action="{{ url_for('editCategoryInfo',weapon_class_id = weapon_class_id) }}" method = 'post'>
+
+<dl>
+	<dt><h2>Name:</h2></dt>
+	<dd><input type ='text' size='30' name='name' placeholder = '{{item.name }}'></dd>
+</dl>
+
+
+<input type='submit' style="font-family: fortnite; font-size: 16px; background-color: green; color: white; border-radius: 8px;" value='Edit'>
+
+<a href = "{{url_for('weaponList', weapon_class_id = weapon_class_id) }}"> 
+	<button type="button" style="font-family: fortnite; font-size: 16px; background-color: orange; color: white; border-radius: 8px;">
+	Cancel</button>
+</a>
+
+</form>
+
+</body>
+
+</html>

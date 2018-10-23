@@ -1,0 +1,30 @@
+<html>
+
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<h1>New Menu Category</h1>
+
+<form action="{{ url_for('newCategory')}}" method = 'post'>
+
+<dl>
+	<dt><h2>Name:</h2></dt>
+		<dd><input type ='text' size='30' name='name' required></dd>
+</dl>
+
+<input type='submit' style="font-family: fortnite; font-size: 16px; background-color: yellow; color: black; border-radius: 8px;" value='Create'>
+
+<a href = "{{url_for('weaponList', weapon_class_id = weapon_class_id) }}"> 
+	<button type="button" style="font-family: fortnite; font-size: 16px; background-color: orange; color: white; border-radius: 8px;">
+		Cancel
+	</button>
+</a>
+
+</form>
+
+</body>
+
+</html>

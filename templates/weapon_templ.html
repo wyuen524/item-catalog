@@ -1,0 +1,61 @@
+<html>
+
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body class="info">
+	{% if redirect %}
+		<script>window.top.location.reload();</script>
+	{% endif %}
+
+	<div class="CRUD">
+		<h2 style="font-family: fortnite;">Category:
+			<a href="{{url_for('newCategory')}}">
+				<button style="font-family: fortnite; font-size: 16px; background-color: yellow; color: black;">Add</button>
+			</a>
+			<a href="{{url_for('editCategoryInfo', weapon_class_id=weapon_class.id)}}">
+				<button style="font-family: fortnite; font-size: 16px; background-color: green; color: white;">Edit</button>
+			</a>
+			<a href="{{url_for('deleteCategory', weapon_class_id=weapon_class.id)}}">
+				<button style="font-family: fortnite; font-size: 16px; background-color: red; color: white;">Delete</button>
+			</a>
+		</h2>
+	</div>
+
+	{% for i in items %}
+
+	    <div class = 'name' style="font-family: fortnite; color: white;">
+			<p><h1>{{i.name}}</h1></p>
+		</div>
+		<div class = 'description' style="font-family: fortnite; color: white;">
+			<p><h2>{{i.description}}</h2></p>
+		</div>
+		<div class = 'damage' style="font-family: fortnite; color: white;">
+			<p><h2>Single Hit Damage: <span style="color: yellow;">{{i.damage}}</span></h2></p>
+		</div>
+		<div class = 'dps' style="font-family: fortnite; color: white;">
+			<p><h2>Damage Per Second (assuming all shots hit target): <span style="color: yellow;">{{i.dps}}</span></h2></p>
+		</div>
+
+		<div class = "CRUD">
+			<a href="{{url_for('editItemInfo', weapon_class_id=weapon_class.id, weapon_id=i.id)}}" >
+				<button style="font-family: fortnite; font-size: 16px; background-color: green; color: white;">Edit</button>
+			</a>
+			<a href="{{url_for('deleteItem', weapon_class_id=weapon_class.id, weapon_id=i.id)}}">
+				<button style="font-family: fortnite; font-size: 16px; background-color: red; color: white;">Delete</button>
+			</a>
+		</div>
+
+	{% endfor %}
+
+	<br>
+	<a href="{{url_for('newItem', weapon_class_id=weapon_class.id)}}">
+		<button style="font-family: fortnite; font-size: 16px; background-color: yellow; color: black; height: 30px; width: 124px; border-radius: 8px">Add Item</button>
+	</a>
+
+</div>
+
+</body>
+
+</html>

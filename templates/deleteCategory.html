@@ -1,0 +1,24 @@
+<html>
+
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<h1> Are you sure you want to delete {{category.name}}? </h1>
+
+<form action="{{ url_for('deleteCategory',weapon_class_id = category.id) }}" method = 'post'>
+
+<input type='submit' style="font-family: fortnite; font-size: 16px; background-color: red; color: white; border-radius: 8px;" value = 'Delete'>
+
+<a href = '{{url_for('weaponList', weapon_class_id = category.id)}}'>
+	<button type="button" style="font-family: fortnite; font-size: 16px; background-color: orange; color: white; border-radius: 8px;"> 
+		Cancel</button>
+</a>
+
+</form>
+
+</body>
+
+</html>
