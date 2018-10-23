@@ -37,6 +37,7 @@ def showLogin():
     return render_template('login.html', STATE=state)
 
 
+# Login
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -123,6 +124,7 @@ def gconnect():
     return output
 
 
+# Disconnect google user
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session['access_token']
@@ -159,7 +161,7 @@ def gdisconnect():
         return response
 
 
-# Show all weapons
+# Index page to show all categories
 @app.route('/')
 @app.route('/weapons/')
 def showWeapons():
@@ -171,6 +173,7 @@ def showWeapons():
                                login_state=login_session['username'])
 
 
+# Show all item info
 @app.route('/weapons/<int:weapon_class_id>/')
 @app.route('/weapons/<int:weapon_class_id>/list')
 def weaponList(weapon_class_id):
@@ -183,7 +186,7 @@ def weaponList(weapon_class_id):
                            items=items)
 
 
-# new create url
+# Create new item
 @app.route('/weapons/<int:weapon_class_id>/new', methods=['GET', 'POST'])
 def newItem(weapon_class_id):
     if 'username' not in login_session:
@@ -205,7 +208,7 @@ def newItem(weapon_class_id):
                                category=category)
 
 
-# new category
+# Create new category
 @app.route('/weapons/new', methods=['GET', 'POST'])
 def newCategory():
     if 'username' not in login_session:
@@ -227,7 +230,7 @@ def newCategory():
                                weapon_class_id=weapon_class.id)
 
 
-# edit url
+# Edit item
 @app.route('/weapons/<int:weapon_class_id>/<int:weapon_id>/edit',
            methods=['GET', 'POST'])
 def editItemInfo(weapon_class_id, weapon_id):
@@ -274,7 +277,7 @@ def editItemInfo(weapon_class_id, weapon_id):
             weapon_id=weapon_id, item=editedItem, category=category)
 
 
-# edit url
+# Edit category
 @app.route('/weapons/<int:weapon_class_id>/edit',
            methods=['GET', 'POST'])
 def editCategoryInfo(weapon_class_id):
@@ -296,7 +299,7 @@ def editCategoryInfo(weapon_class_id):
                                item=editedCategory)
 
 
-# delete item
+# Delete item
 @app.route('/weapons/<int:weapon_class_id>/<int:weapon_id>/delete',
            methods=['GET', 'POST'])
 def deleteItem(weapon_class_id, weapon_id):
@@ -311,7 +314,7 @@ def deleteItem(weapon_class_id, weapon_id):
         return render_template('deleteItem.html', item=itemToDelete)
 
 
-# delete category
+# Delete category
 @app.route('/weapons/<int:weapon_class_id>/delete',
            methods=['GET', 'POST'])
 def deleteCategory(weapon_class_id):
@@ -335,7 +338,6 @@ def showall_JSON():
     itemList = []
     weapon = session.query(Weapon).all()
     for w in weapon:
-        d = OrderedDict()
         items = session.query(ItemInfo).filter_by(
             weapon_id=w.id).all()
         itemList += [{"id": w.id, "name": w.name,
@@ -344,12 +346,21 @@ def showall_JSON():
 
 
 # Return list of all items for category in JSON
-@app.route('/weapons/<int:weapon_id>/json')
-def weaponInfoJSON(weapon_id):
-    weapon = session.query(Weapon).filter_by(id=weapon_id).one()
+@app.route('/weapons/<int:weapon_class_id>/json')
+def weaponInfoJSON(weapon_class_id):
+    weapon = session.query(Weapon).filter_by(id=weapon_class_id).one()
+    items = session.query(ItemInfo).filter_by(
+                            weapon_id=weapon_class_id).all()
+    return jsonify(Category=[{"id": weapon.id, "name": weapon.name,
+                             "weapons:": [i.serialize for i in items]}])
+
+
+# Return details for item in JSON
+@app.route('/details/<int:weapon_id>/json')
+def specificWeaponInfoJSON(weapon_id):
     items = session.query(ItemInfo).filter_by(
                             weapon_id=weapon_id).all()
-    return jsonify(Items=[i.serialize for i in items])
+    return jsonify(Item=[i.serialize for i in items])
 
 
 if __name__ == '__main__':

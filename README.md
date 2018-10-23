@@ -64,5 +64,8 @@ To see entire catalog in JSON:
 localhost:8000/weapons/catalog.json
 
 To see a single category in JSON:
-localhost:8000/weapons/<int:weapon_id>/json
+localhost:8000/weapons/<int:weapon_class_id>/json
+
+To see a single item in JSON:
+http://localhost:8000/details/<int:weapon_id>/json
 ```
