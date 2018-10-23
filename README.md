@@ -2,8 +2,8 @@
 
 ### Prerequisites
 
-Vagrant
-Virtual Box
+* [Vagrant](https://www.vagrantup.com/downloads.html)
+* [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
 
 ### How to run
 
@@ -18,6 +18,8 @@ python application.py
 ```
 
 ### API endpoints
+
+These are the endpoints you can reach by typing in the url in the browser directly.
 
 ```
 Category
