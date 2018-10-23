@@ -336,7 +336,8 @@ def deleteCategory(weapon_class_id):
         return redirect('/login')
     catToDelete = session.query(Weapon).filter_by(id=weapon_class_id).one()
     if request.method == 'POST':
-        itemsToDelete = session.query(ItemInfo).filter_by(id=catToDelete.id).delete()
+        itemsToDelete = session.query(ItemInfo).filter_by(
+                                      id=catToDelete.id).delete()
         session.delete(catToDelete)
         session.commit()
         nextCat = session.query(Weapon).first()
