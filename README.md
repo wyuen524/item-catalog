@@ -4,15 +4,37 @@
 
 * [Vagrant](https://www.vagrantup.com/downloads.html)
 * [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
+* [Udacity VM](https://github.com/udacity/fullstack-nanodegree-vm)
 
 ### How to run
 
-```
-cd to directory with the Vagrantfile
-vagrant up
-vagrant ssh
+Clone the Udacity fullstack-nanodegree-vm
 
-copy catalog directory to /vagrant
+```
+git clone https://github.com/udacity/fullstack-nanodegree-vm.git
+```
+
+Build the Vagrant VM
+
+```
+cd /vagrant
+vagrant up (wait until setup is complete)
+vagrant ssh
+```
+
+Replace the existing catalog directory with files from this repo
+
+Create and load data into the database
+
+```
+cd /vagrant/catalog
+python database_setup.py
+python load_db.py
+```
+
+To start the application
+
+```
 cd /vagrant/catalog
 python application.py
 ```
