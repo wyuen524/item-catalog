@@ -9,7 +9,7 @@ from flask import (
 )
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Weapon, ItemInfo
+from database_setup import Base, Weapon, ItemInfo, User
 from flask import session as login_session
 from collections import OrderedDict
 from oauth2client.client import flow_from_clientsecrets
@@ -33,6 +33,18 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+# Check if User already exists, if not create new row
+def get_or_create(sesion, model, **kwargs):
+    instance = sesion.query(model).filter_by(**kwargs).first()
+    if instance:
+        return instance
+    else:
+        instance = model(**kwargs)
+        session.add(instance)
+        session.commit()
+        return instance
 
 
 # Create anti-forgery state token
@@ -117,6 +129,8 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+
+    get_or_create(session, User, email=login_session['email'])
 
     output = ''
     output += '<h1>Welcome, '
@@ -211,11 +225,15 @@ def newItem(weapon_class_id):
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
+        user = session.query(User).filter_by(
+                             email=login_session['email']).first()
+
         newItem = ItemInfo(name=request.form['name'],
                            description=request.form['description'],
                            damage=request.form['damage'],
                            dps=request.form['dps'],
-                           weapon_id=weapon_class_id)
+                           weapon_id=weapon_class_id,
+                           user_id=user.id)
         session.add(newItem)
         session.commit()
         return redirect(url_for('weaponList',
@@ -233,7 +251,10 @@ def newCategory():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newCategory = Weapon(name=request.form['name'])
+        user = session.query(User).filter_by(
+                             email=login_session['email']).first()
+
+        newCategory = Weapon(name=request.form['name'], user_id=user.id)
         session.add(newCategory)
         session.commit()
         weapon_class = session.query(Weapon).filter_by(
@@ -257,6 +278,9 @@ def editItemInfo(weapon_class_id, weapon_id):
         return redirect('/login')
     category = session.query(Weapon)
     editedItem = session.query(ItemInfo).filter_by(id=weapon_id).one()
+
+    if login_session["email"] != editedItem.user.email:
+        return render_template('error.html')
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -304,8 +328,13 @@ def editItemInfo(weapon_class_id, weapon_id):
 def editCategoryInfo(weapon_class_id):
     if 'username' not in login_session:
         return redirect('/login')
+
     editedCategory = session.query(Weapon).filter_by(id=weapon_class_id).one()
     items = session.query(ItemInfo).filter_by(weapon_id=editedCategory.id)
+
+    if login_session["email"] != editedCategory.user.email:
+        return render_template('error.html')
+
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
@@ -327,6 +356,9 @@ def deleteItem(weapon_class_id, weapon_id):
     if 'username' not in login_session:
         return redirect('/login')
     itemToDelete = session.query(ItemInfo).filter_by(id=weapon_id).first()
+
+    if login_session["email"] != itemToDelete.user.email:
+        return render_template('error.html')
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -342,6 +374,9 @@ def deleteCategory(weapon_class_id):
     if 'username' not in login_session:
         return redirect('/login')
     catToDelete = session.query(Weapon).filter_by(id=weapon_class_id).one()
+
+    if login_session["email"] != catToDelete.user.email:
+        return render_template('error.html')
     if request.method == 'POST':
         itemsToDelete = session.query(ItemInfo).filter_by(
                                       id=catToDelete.id).delete()
